@@ -53,7 +53,6 @@ Flight::route('GET /crateserver/@servername/@userid', function ($servername, $us
 
 // Function that change server name
 Flight::route('GET /change_sever_name/@newservername/@authcode', function ($newservername, $authcode) {
-
     $unos = Flight::pm()->change_server_name($newservername, $authcode);
     if ($unos) {
         $status = $newservername;
@@ -65,7 +64,6 @@ Flight::route('GET /change_sever_name/@newservername/@authcode', function ($news
 
 // Function that remove srever
 Flight::route('GET /remove_server/@authcode', function ($authcode) {
-
     $unos = Flight::pm()->remove_server($authcode);
     if ($unos) {
         $status = $authcode;
@@ -114,15 +112,15 @@ Flight::route('POST /endpoint', function () {
     $auth_data = Flight::pm()->get_valid_auth($auth_code);
     $row_cnt = count($auth_data);
 
-    if($row_cnt == 1){
-    $unos = Flight::pm()->insert_monitor_data($auth_code, $os_name, $os_version, $cpu_model, $cpu_architecture, $cpu_cores, $cpu_threads, $cpu_percentage, $hostname, $internal_ip, $external_ip, $ram_total, $ram_used, $ram_free, $ram_shared, $ram_available, $ram_buff, $swap_total, $swap_used, $swap_free, $total_hdd, $used_hdd, $available_hdd, $pid_running, $uptime, $timesubmited);
-    if ($unos) {
-        print_r("Successfully sent to DB");
+    if ($row_cnt == 1) {
+        $unos = Flight::pm()->insert_monitor_data($auth_code, $os_name, $os_version, $cpu_model, $cpu_architecture, $cpu_cores, $cpu_threads, $cpu_percentage, $hostname, $internal_ip, $external_ip, $ram_total, $ram_used, $ram_free, $ram_shared, $ram_available, $ram_buff, $swap_total, $swap_used, $swap_free, $total_hdd, $used_hdd, $available_hdd, $pid_running, $uptime, $timesubmited);
+        if ($unos) {
+            print_r("Successfully sent to DB");
+        } else {
+            print_r("Error");
+        }
     } else {
-        print_r("Error");
-    }
-    }else{
-      print_r("Server Auth Error");
+        print_r("Server Auth Error");
     }
 });
 
