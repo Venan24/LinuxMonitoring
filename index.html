@@ -212,6 +212,7 @@ License: You must have a valid license purchased only from themeforest(the above
 </body>
 
 <script type="text/javascript">
+  //Login Check
   if (!Utils.get_from_localstorage('user')) {
     window.location = "/login.html";
   } else {
@@ -219,8 +220,13 @@ License: You must have a valid license purchased only from themeforest(the above
     $('.profile-name').html(Utils.get_from_localstorage('user').name);
     $('#profile-email').html(Utils.get_from_localstorage('user').email);
     $('body').show();
+
+    //GET DATA
+    get_user_servers_list();
+    get_user_servers_by_number();
   }
 
+  //Get all servers that running script (at least once)
   function get_user_servers_list() {
     var userID = Utils.get_from_localstorage('user').id;
     $.get("rest/v1/server/" + userID).done(function(data) {
@@ -237,6 +243,7 @@ License: You must have a valid license purchased only from themeforest(the above
     });
   }
 
+  //Get number of all servers that belong to user
   function get_user_servers_by_number() {
     var userID = Utils.get_from_localstorage('user').id;
     $.get("rest/v1/serverbynum/" + userID).done(function(data) {
@@ -247,6 +254,7 @@ License: You must have a valid license purchased only from themeforest(the above
     });
   }
 
+  //Create new server
   function create_new_server() {
     swal({
       title: "Add New Machine:",
@@ -275,6 +283,7 @@ License: You must have a valid license purchased only from themeforest(the above
     });
   }
 
+  //Remove selected server
   function remove_selected_server(clickedServerAuth) {
     swal({
         title: "Are you sure?",
@@ -307,10 +316,12 @@ License: You must have a valid license purchased only from themeforest(the above
       });
   }
 
+  //Return auth code when user click on server name
   function return_auth(clickeditem) {
     swal("Auth Code: " + clickeditem);
   }
 
+  //Change server name
   function change_sever_name(clickedServerAuth) {
     swal({
       title: "Change Server Name:",
@@ -346,10 +357,6 @@ License: You must have a valid license purchased only from themeforest(the above
       });
     });
   }
-
-
-  get_user_servers_list();
-  get_user_servers_by_number();
 </script>
 
 </html>
