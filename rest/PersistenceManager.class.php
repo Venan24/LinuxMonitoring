@@ -59,7 +59,7 @@ class PersistenceManager{
   }
 
   public function get_valid_auth($auth){
-    return $this->query_single('SELECT * FROM servers WHERE auth_code = :auth', [':auth' => $auth]);
+    return $this->query('SELECT * FROM servers WHERE auth_code = :auth', [':auth' => $auth]);
   }
 
   public function insert_monitor_data($auth_code, $os_name, $os_version, $cpu_model, $cpu_architecture, $cpu_cores, $cpu_threads, $cpu_percentage, $hostname, $internal_ip, $external_ip, $ram_total, $ram_used, $ram_free, $ram_shared, $ram_available, $ram_buff, $swap_total, $swap_used, $swap_free, $total_hdd, $used_hdd, $available_hdd, $pid_running, $uptime, $timesubmited){
