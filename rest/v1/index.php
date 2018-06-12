@@ -63,6 +63,18 @@ Flight::route('GET /change_sever_name/@newservername/@authcode', function ($news
     Flight::json($status);
 });
 
+// Function that remove srever
+Flight::route('GET /remove_server/@authcode', function ($authcode) {
+
+    $unos = Flight::pm()->remove_server($authcode);
+    if ($unos) {
+        $status = $authcode;
+    } else {
+        $status = "greskica";
+    }
+    Flight::json($status);
+});
+
 // Function return number of active servers by that user
 Flight::route('GET /serverbynum/@id', function ($id) {
     $data = Flight::pm()->query("SELECT * FROM servers WHERE user_id = :id ", [':id' => $id]);

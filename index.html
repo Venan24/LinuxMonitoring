@@ -229,7 +229,7 @@ License: You must have a valid license purchased only from themeforest(the above
         $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' + '<td>' + item.os_version +
           '</td>' + '<td>' + item.external_ip +
           '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Edit</a><a href="stats.html?auth=' + item.auth_code + '&servername=' + item.server_name +
-          '" class="btn btn-success"><span class="icon-graph"></span> Stats</a><a href="javascript:;kao_remove();" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
+          '" class="btn btn-success"><span class="icon-graph"></span> Stats</a><a id="' + item.auth_code + '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
         );
       })
     }).fail(function(error) {
@@ -275,15 +275,36 @@ License: You must have a valid license purchased only from themeforest(the above
     });
   }
 
-  function kao_remove() {
+  function remove_selected_server(clickedServerAuth) {
     swal({
-      title: "HAJDEMOOOOOOO:",
-      text: "radil ti ovo:",
-      type: "input",
-      showCancelButton: true,
-      closeOnConfirm: false,
-      inputPlaceholder: "pisi brisi"
-    })
+        title: "Are you sure?",
+        text: "Your will not be able to recover this server!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn-danger",
+        confirmButtonText: "Yes, delete it!",
+        closeOnConfirm: false
+      },
+      function() {
+        $.get("rest/v1/remove_server/" + clickedServerAuth).done(function(data) {
+          if (data != "greskica") {
+            swal({
+              title: "Deleted!",
+              text: "Your server has been deleted",
+              type: "success",
+              timer: 2500,
+              showConfirmButton: false
+            });
+            window.setTimeout(function() {
+              location.reload();
+            }, 1500);
+          } else {
+            swal("Error!", "Error in: " + data, "error");
+          }
+        }).fail(function(error) {
+          console.log(error);
+        });
+      });
   }
 
   function return_auth(clickeditem) {
