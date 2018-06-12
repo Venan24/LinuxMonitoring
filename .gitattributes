@@ -1,4 +1,2 @@
-#ignore thumbnails created by windows
-Thumbs.db
-*.css
-*.html
+bower_components/bootstrap-sweetalert/* linguist-vendored
+css/* linguist-vendored
