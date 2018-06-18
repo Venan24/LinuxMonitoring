@@ -218,7 +218,7 @@ License: You must have a valid license purchased only from themeforest(the above
   } else {
     var token = Utils.get_from_localstorage('auth');
     $.get("rest/v1/provjeritoken/" + token).done(function(data) {
-      if(data.Authorized != false){
+      if (data.Authorized != false) {
         $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
         $('.profile-name').html(Utils.get_from_localstorage('user').name);
         $('#profile-email').html(Utils.get_from_localstorage('user').email);
@@ -227,7 +227,7 @@ License: You must have a valid license purchased only from themeforest(the above
         //GET DATA
         get_user_servers_list();
         get_user_servers_by_number();
-      }else{
+      } else {
         Utils.remove_from_localstorage('auth');
         Utils.remove_from_localstorage('user');
         window.location = "/login.html";
@@ -242,7 +242,8 @@ License: You must have a valid license purchased only from themeforest(the above
       //console.log(data);
       $('#all_servers').html("");
       $.each(data, function(index, item) {
-        $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' + '<td>' + item.os_version +
+        $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' +
+          '<td>' + item.os_version +
           '</td>' + '<td>' + item.external_ip +
           '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a href="stats.html?auth=' + item.auth_code + '&servername=' + item.server_name +
           '" class="btn btn-success"><span class="icon-graph"></span> Stats</a><a id="' + item.auth_code + '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
@@ -328,9 +329,33 @@ License: You must have a valid license purchased only from themeforest(the above
       });
   }
 
-  //Return auth code when user click on server name
+  //Return auth code when user click on server name and make copy to clipboard
   function return_auth(clickeditem) {
-    swal("Auth Code: " + clickeditem);
+    swal({
+        title: "Authentication Code:",
+        text: "Your auth code for python scrypt is: " + clickeditem,
+        type: "info",
+        showCancelButton: false,
+        confirmButtonClass: "btn-success",
+        confirmButtonText: "Copy To Clipboard!",
+        closeOnConfirm: false
+      },
+      function() {
+        var dummy = document.createElement("input");
+        document.body.appendChild(dummy);
+        dummy.setAttribute("id", "dummy_id");
+        dummy.setAttribute('value', clickeditem)
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        swal({
+          title: "Copyed!",
+          text: "Your auth code has been copyed",
+          type: "success",
+          timer: 2500,
+          showConfirmButton: false
+        });
+      });
   }
 
   //Change server name
