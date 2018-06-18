@@ -321,7 +321,18 @@ License: You must have a valid license purchased only from themeforest(the above
       $.get("rest/v1/crateserver/" + inputValue + "/" + userID).done(function(data) {
         console.log(data);
         if (data != "greskica") {
-          swal("Auth: " + data, "Remeber to save your auth code!!!", "success");
+            swal({
+                title: "Authentification Code: " + data,
+                type: "info",
+                confirmButtonClass: "btn-info",
+                confirmButtonText: "Close",
+                closeOnConfirm: true
+              },
+              function() {
+                get_user_servers_list();
+                get_user_servers_list_inactive()
+                get_user_servers_by_number();
+              });
         } else {
           swal("Error!", "Error in: " + data, "error");
         }
