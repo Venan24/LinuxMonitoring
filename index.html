@@ -77,7 +77,7 @@ License: You must have a valid license purchased only from themeforest(the above
               </li>
               <li>
                 <a href="auth_codes.html">
-                                        <i class="icon-key"></i> Get Auth Code </a>
+                                        <i class="icon-key"></i> Show All Servers </a>
               </li>
             </ul>
           </li>
@@ -231,10 +231,11 @@ License: You must have a valid license purchased only from themeforest(the above
     var userID = Utils.get_from_localstorage('user').id;
     $.get("rest/v1/server/" + userID).done(function(data) {
       //console.log(data);
+      $('#all_servers').html("");
       $.each(data, function(index, item) {
-        $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' + '<td>' + item.os_version +
+        $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' + '<td>' + item.os_version +
           '</td>' + '<td>' + item.external_ip +
-          '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Edit</a><a href="stats.html?auth=' + item.auth_code + '&servername=' + item.server_name +
+          '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a href="stats.html?auth=' + item.auth_code + '&servername=' + item.server_name +
           '" class="btn btn-success"><span class="icon-graph"></span> Stats</a><a id="' + item.auth_code + '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
         );
       })
@@ -248,6 +249,7 @@ License: You must have a valid license purchased only from themeforest(the above
     var userID = Utils.get_from_localstorage('user').id;
     $.get("rest/v1/serverbynum/" + userID).done(function(data) {
       //console.log(data);
+      $('#serversnumber').html("");
       $('#serversnumber').append(data);
     }).fail(function(error) {
       console.log(error.responseJSON.error);
@@ -305,8 +307,9 @@ License: You must have a valid license purchased only from themeforest(the above
               showConfirmButton: false
             });
             window.setTimeout(function() {
-              location.reload();
-            }, 1500);
+              get_user_servers_list();
+              get_user_servers_by_number();
+            }, 2500);
           } else {
             swal("Error!", "Error in: " + data, "error");
           }
@@ -347,8 +350,8 @@ License: You must have a valid license purchased only from themeforest(the above
             showConfirmButton: false
           });
           window.setTimeout(function() {
-            location.reload();
-          }, 1500);
+            get_user_servers_list();
+          }, 2500);
         } else {
           swal("Error!", "Error in: " + data, "error");
         }
