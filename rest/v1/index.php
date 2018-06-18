@@ -204,7 +204,7 @@ Flight::route('GET /provjeritoken/@token', function ($token) {
         $user = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256']);
         Flight::json(array('Authorized' => true));
     } catch (Exception $e) {
-        Flight::halt(401, Flight::json(['Authorized' => false]));
+        Flight::json(['Authorized' => false, 'JWT Token Error' => $e->getMessage()]);
     }
 });
 

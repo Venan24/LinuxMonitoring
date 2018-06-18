@@ -218,7 +218,7 @@ License: You must have a valid license purchased only from themeforest(the above
   } else {
     var token = Utils.get_from_localstorage('auth');
     $.get("rest/v1/provjeritoken/" + token).done(function(data) {
-      if(data != false){
+      if(data.Authorized != false){
         $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
         $('.profile-name').html(Utils.get_from_localstorage('user').name);
         $('#profile-email').html(Utils.get_from_localstorage('user').email);
