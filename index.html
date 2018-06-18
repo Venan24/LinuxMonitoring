@@ -354,6 +354,7 @@ License: You must have a valid license purchased only from themeforest(the above
             });
             window.setTimeout(function() {
               get_user_servers_list();
+              get_user_servers_list_inactive()
               get_user_servers_by_number();
             }, 2500);
           } else {
@@ -421,6 +422,7 @@ License: You must have a valid license purchased only from themeforest(the above
           });
           window.setTimeout(function() {
             get_user_servers_list();
+            get_user_servers_list_inactive()
           }, 2500);
         } else {
           swal("Error!", "Error in: " + data, "error");
