@@ -197,6 +197,18 @@ Flight::route('GET /user/@email', function ($email) {
     }
 });
 
+//Check if authorization token is valid
+Flight::route('GET /provjeritoken/@token', function () {
+    try {
+        //$token = Flight::request()->data->token;
+        $user = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256']);
+        Flight::json(array('Authorized' => true));
+    } catch (Exception $e) {
+        Flight::halt(401, Flight::json(['Authorized' => false]));
+    }
+});
+
+
 //Viber webhook (handling user request to viber public account)
 Flight::route('POST /new_webhook_page', function () {
     $request = file_get_contents("php://input");
