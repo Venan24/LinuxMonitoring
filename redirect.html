@@ -5,6 +5,7 @@
     var token = Utils.get_query_param('t');
     $.post( "rest/v1/decode", { token: token }).done(function(data) {
       Utils.set_to_localstorage('user', data);
+      Utils.set_to_localstorage('auth', token);
       window.location="/";
     }).fail(function(error) {
       alert(error.responseJSON.error);

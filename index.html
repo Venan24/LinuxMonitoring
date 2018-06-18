@@ -216,14 +216,21 @@ License: You must have a valid license purchased only from themeforest(the above
   if (!Utils.get_from_localstorage('user')) {
     window.location = "/login.html";
   } else {
-    $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
-    $('.profile-name').html(Utils.get_from_localstorage('user').name);
-    $('#profile-email').html(Utils.get_from_localstorage('user').email);
-    $('body').show();
+    var token = Utils.get_from_localstorage('auth');
+    $.get("rest/v1/provjeritoken/" + token).done(function(data) {
+      if(data != false){
+        $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
+        $('.profile-name').html(Utils.get_from_localstorage('user').name);
+        $('#profile-email').html(Utils.get_from_localstorage('user').email);
+        $('body').show();
 
-    //GET DATA
-    get_user_servers_list();
-    get_user_servers_by_number();
+        //GET DATA
+        get_user_servers_list();
+        get_user_servers_by_number();
+      }else{
+        window.location = "/login.html";
+      }
+    });
   }
 
   //Get all servers that running script (at least once)

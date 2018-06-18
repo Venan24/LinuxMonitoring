@@ -198,7 +198,7 @@ Flight::route('GET /user/@email', function ($email) {
 });
 
 //Check if authorization token is valid
-Flight::route('GET /provjeritoken/@token', function () {
+Flight::route('GET /provjeritoken/@token', function ($token) {
     try {
         //$token = Flight::request()->data->token;
         $user = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256']);
