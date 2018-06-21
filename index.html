@@ -232,10 +232,10 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <script type="text/javascript">
   //Login Check
+  var token = Utils.get_from_localstorage('auth');
   if (!Utils.get_from_localstorage('user')) {
     window.location = "/login.html";
   } else {
-    var token = Utils.get_from_localstorage('auth');
     $.get("rest/v1/provjeritoken/" + token).done(function(data) {
       if (data.Authorized != false) {
         $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
@@ -257,7 +257,6 @@ License: You must have a valid license purchased only from themeforest(the above
 
   //Get all servers that running script (at least once)
   function get_user_servers_list() {
-    var token = Utils.get_from_localstorage('auth');
     $.get("rest/v1/server/" + token).done(function(data) {
       //console.log(data);
       if (data.Authorized == false) {
