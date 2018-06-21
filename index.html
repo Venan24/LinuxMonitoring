@@ -257,18 +257,26 @@ License: You must have a valid license purchased only from themeforest(the above
 
   //Get all servers that running script (at least once)
   function get_user_servers_list() {
-    var userID = Utils.get_from_localstorage('user').id;
-    $.get("rest/v1/server/" + userID).done(function(data) {
+    var token = Utils.get_from_localstorage('auth');
+    $.get("rest/v1/server/" + token).done(function(data) {
       //console.log(data);
-      $('#all_servers').html("");
-      $.each(data, function(index, item) {
-        $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' +
-          '<td>' + item.os_version +
-          '</td>' + '<td>' + item.external_ip +
-          '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a href="stats.html?auth=' + item.auth_code + '&servername=' + item.server_name +
-          '" class="btn btn-success"><span class="icon-graph"></span> Stats</a><a id="' + item.auth_code + '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
-        );
-      })
+      if (data.Authorized == false) {
+        Utils.remove_from_localstorage('auth');
+        Utils.remove_from_localstorage('user');
+        window.location = "/login.html";
+      } else {
+        $('#all_servers').html("");
+        $.each(data, function(index, item) {
+          $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' +
+            '<td>' + item.os_version +
+            '</td>' + '<td>' + item.external_ip +
+            '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a href="stats.html?auth=' + item.auth_code + '&servername=' + item
+            .server_name +
+            '" class="btn btn-success"><span class="icon-graph"></span> Stats</a><a id="' + item.auth_code +
+            '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
+          );
+        });
+      }
     }).fail(function(error) {
       console.log(error.responseJSON.error);
     });
@@ -282,7 +290,8 @@ License: You must have a valid license purchased only from themeforest(the above
       $('#all_inactive_servers').html("");
       $.each(data, function(index, item) {
         $('#all_inactive_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' +
-          '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a id="' + item.auth_code + '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
+          '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a id="' + item.auth_code +
+          '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
         );
       })
     }).fail(function(error) {
@@ -321,18 +330,18 @@ License: You must have a valid license purchased only from themeforest(the above
       $.get("rest/v1/crateserver/" + inputValue + "/" + userID).done(function(data) {
         console.log(data);
         if (data != "greskica") {
-            swal({
-                title: "Authentification Code: " + data,
-                type: "info",
-                confirmButtonClass: "btn-info",
-                confirmButtonText: "Close",
-                closeOnConfirm: true
-              },
-              function() {
-                get_user_servers_list();
-                get_user_servers_list_inactive()
-                get_user_servers_by_number();
-              });
+          swal({
+              title: "Authentification Code: " + data,
+              type: "info",
+              confirmButtonClass: "btn-info",
+              confirmButtonText: "Close",
+              closeOnConfirm: true
+            },
+            function() {
+              get_user_servers_list();
+              get_user_servers_list_inactive()
+              get_user_servers_by_number();
+            });
         } else {
           swal("Error!", "Error in: " + data, "error");
         }

@@ -15,9 +15,15 @@ Flight::route('/', function () {
 });
 
 // Function return all active servers that belong to specific user
-Flight::route('GET /server/@id', function ($id) {
-    $data = Flight::pm()->query("SELECT s.server_id, s.server_name, m.os_name, m.os_version, m.external_ip, m.auth_code FROM servers s INNER JOIN Monitoring m ON s.auth_code = m.auth_code INNER JOIN ( SELECT max(id) max_id, os_name, os_version, auth_code FROM Monitoring GROUP BY os_name, os_version, auth_code ) t ON t.max_id = m.id WHERE s.user_id = :id ", [':id' => $id]);
-    Flight::json($data);
+Flight::route('GET /server/@token', function ($token) {
+  try {
+      $tokenID = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+      $userid = $tokenID['id'];
+      $data = Flight::pm()->query("SELECT s.server_id, s.server_name, m.os_name, m.os_version, m.external_ip, m.auth_code FROM servers s INNER JOIN Monitoring m ON s.auth_code = m.auth_code INNER JOIN ( SELECT max(id) max_id, os_name, os_version, auth_code FROM Monitoring GROUP BY os_name, os_version, auth_code ) t ON t.max_id = m.id WHERE s.user_id = :id ", [':id' => $userid]);
+      Flight::json($data);
+  } catch (Exception $e) {
+      Flight::json(['Authorized' => false, 'JWT Token Error' => $e->getMessage()]);
+  }
 });
 
 // Function return all inactive servers that belong to specific user
