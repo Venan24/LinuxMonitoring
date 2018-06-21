@@ -335,10 +335,9 @@ License: You must have a valid license purchased only from themeforest(the above
         swal.showInputError("You need to write something!");
         return false
       }
-      var userID = Utils.get_from_localstorage('user').id;
-      $.get("rest/v1/crateserver/" + inputValue + "/" + userID).done(function(data) {
+      $.get("rest/v1/crateserver/" + inputValue + "/" + token).done(function(data) {
         console.log(data);
-        if (data != "greskica") {
+        if (data.Authorized != false) {
           swal({
               title: "Authentification Code: " + data,
               type: "info",

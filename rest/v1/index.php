@@ -57,16 +57,18 @@ Flight::route('GET /getdataforedit/@auth', function ($auth) {
 });
 
 // Function that create new server and return auth to sweetalert
-Flight::route('GET /crateserver/@servername/@userid', function ($servername, $userid) {
-    $rand_auth = uniqid();
-    $status = "greskica";
-    $unos = Flight::pm()->add_new_server($rand_auth, $userid, $servername);
-    if ($unos) {
-        $status = $rand_auth;
-    } else {
-        $status = "greskica";
+Flight::route('GET /crateserver/@servername/@userid', function ($servername, $token) {
+    try {
+        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $userid = $token['id'];
+        $rand_auth = uniqid();
+        $unos = Flight::pm()->add_new_server($rand_auth, $userid, $servername);
+        if ($unos) {
+            Flight::json($rand_auth);
+        }
+    } catch (Exception $e) {
+        Flight::json(['Authorized' => false, 'JWT Token Error' => $e->getMessage()]);
     }
-    Flight::json($status);
 });
 
 // Function that change server name
