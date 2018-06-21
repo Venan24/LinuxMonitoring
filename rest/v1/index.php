@@ -27,9 +27,15 @@ Flight::route('GET /server/@token', function ($token) {
 });
 
 // Function return all inactive servers that belong to specific user
-Flight::route('GET /serverinactive/@id', function ($id) {
-    $data = Flight::pm()->query("SELECT * FROM servers WHERE user_id = :id AND NOT EXISTS(SELECT 1 FROM Monitoring WHERE Monitoring.auth_code=servers.auth_code)", [':id' => $id]);
-    Flight::json($data);
+Flight::route('GET /serverinactive/@id', function ($token) {
+    try {
+        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $userid = $token['id'];
+        $data = Flight::pm()->query("SELECT * FROM servers WHERE user_id = :id AND NOT EXISTS(SELECT 1 FROM Monitoring WHERE Monitoring.auth_code=servers.auth_code)", [':id' => $userid]);
+        Flight::json($data);
+    } catch (Exception $e) {
+        Flight::json(['Authorized' => false, 'JWT Token Error' => $e->getMessage()]);
+    }
 });
 
 // Function return all servers that belong to specific user to Get auth codes page

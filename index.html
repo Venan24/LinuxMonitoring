@@ -283,16 +283,21 @@ License: You must have a valid license purchased only from themeforest(the above
 
   //Get all inactive servers
   function get_user_servers_list_inactive() {
-    var userID = Utils.get_from_localstorage('user').id;
-    $.get("rest/v1/serverinactive/" + userID).done(function(data) {
+    $.get("rest/v1/serverinactive/" + token).done(function(data) {
       //console.log(data);
-      $('#all_inactive_servers').html("");
-      $.each(data, function(index, item) {
-        $('#all_inactive_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' +
-          '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a id="' + item.auth_code +
-          '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
-        );
-      })
+      if (data.Authorized == false) {
+        Utils.remove_from_localstorage('auth');
+        Utils.remove_from_localstorage('user');
+        window.location = "/login.html";
+      } else {
+        $('#all_inactive_servers').html("");
+        $.each(data, function(index, item) {
+          $('#all_inactive_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' +
+            '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a id="' + item.auth_code +
+            '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'
+          );
+        });
+      }
     }).fail(function(error) {
       console.log(error.responseJSON.error);
     });
