@@ -92,10 +92,16 @@ Flight::route('GET /remove_server/@authcode', function ($authcode) {
 });
 
 // Function return number of active servers by that user
-Flight::route('GET /serverbynum/@id', function ($id) {
-    $data = Flight::pm()->query("SELECT * FROM servers WHERE user_id = :id ", [':id' => $id]);
-    $row_cnt = count($data);
-    Flight::json($row_cnt);
+Flight::route('GET /serverbynum/@id', function ($token) {
+    try {
+        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $userid = $token['id'];
+        $data = Flight::pm()->query("SELECT * FROM servers WHERE user_id = :id ", [':id' => $userid]);
+        $row_cnt = count($data);
+        Flight::json($row_cnt);
+    } catch (Exception $e) {
+        Flight::json(['Authorized' => false, 'JWT Token Error' => $e->getMessage()]);
+    }
 });
 
 //Post data from python

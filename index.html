@@ -305,11 +305,16 @@ License: You must have a valid license purchased only from themeforest(the above
 
   //Get number of all servers that belong to user
   function get_user_servers_by_number() {
-    var userID = Utils.get_from_localstorage('user').id;
-    $.get("rest/v1/serverbynum/" + userID).done(function(data) {
+    $.get("rest/v1/serverbynum/" + token).done(function(data) {
       //console.log(data);
-      $('#serversnumber').html("");
-      $('#serversnumber').append(data);
+      if (data.Authorized == false) {
+        Utils.remove_from_localstorage('auth');
+        Utils.remove_from_localstorage('user');
+        window.location = "/login.html";
+      } else {
+        $('#serversnumber').html("");
+        $('#serversnumber').append(data);
+      }
     }).fail(function(error) {
       console.log(error.responseJSON.error);
     });
