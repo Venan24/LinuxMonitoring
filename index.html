@@ -328,7 +328,7 @@ License: You must have a valid license purchased only from themeforest(the above
         return false
       }
       $.get("rest/v1/crateserver/" + inputValue + "/" + token).done(function(data) {
-        console.log(data);
+        //console.log(data);
         if (data.Authorized != false) {
           swal({
               title: "Authentification Code: " + data,
@@ -363,8 +363,8 @@ License: You must have a valid license purchased only from themeforest(the above
         closeOnConfirm: false
       },
       function() {
-        $.get("rest/v1/remove_server/" + clickedServerAuth).done(function(data) {
-          if (data != "greskica") {
+        $.get("rest/v1/remove_server/" + clickedServerAuth + "/" + token).done(function(data) {
+          if (data.Authorized != false) {
             swal({
               title: "Deleted!",
               text: "Your server has been deleted",

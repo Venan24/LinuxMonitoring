@@ -83,14 +83,16 @@ Flight::route('GET /change_sever_name/@newservername/@authcode', function ($news
 });
 
 // Function that remove srever
-Flight::route('GET /remove_server/@authcode', function ($authcode) {
-    $unos = Flight::pm()->remove_server($authcode);
-    if ($unos) {
-        $status = $authcode;
-    } else {
-        $status = "greskica";
+Flight::route('GET /remove_server/@authcode/@token', function ($authcode, $token) {
+    try {
+        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $unos = Flight::pm()->remove_server($authcode);
+        if ($unos) {
+            Flight::json($authcode);
+        }
+    } catch (Exception $e) {
+        Flight::halt(401, Flight::json(['Authorized' => false, 'JWT Token Error' => $e->getMessage()]));
     }
-    Flight::json($status);
 });
 
 // Function return number of active servers by that user
