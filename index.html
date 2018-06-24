@@ -370,14 +370,14 @@ License: You must have a valid license purchased only from themeforest(the above
               title: "Deleted!",
               text: "Your server has been deleted",
               type: "success",
-              timer: 2500,
+              timer: 1500,
               showConfirmButton: false
             });
             window.setTimeout(function() {
               get_user_servers_list();
               get_user_servers_list_inactive()
               get_user_servers_by_number();
-            }, 2500);
+            }, 1500);
           } else {
             swal("Error!", "Error in: " + data, "error");
           }
@@ -410,7 +410,7 @@ License: You must have a valid license purchased only from themeforest(the above
           title: "Copyed!",
           text: "Your auth code has been copyed",
           type: "success",
-          timer: 2500,
+          timer: 1500,
           showConfirmButton: false
         });
       });
@@ -438,7 +438,7 @@ License: You must have a valid license purchased only from themeforest(the above
             title: "Success!",
             text: "Name chaged",
             type: "success",
-            timer: 2500,
+            timer: 1000,
             showConfirmButton: false
           });
           window.setTimeout(function() {
