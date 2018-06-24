@@ -144,6 +144,12 @@ var Utils = {
     toastr.success("Local storage has been cleared");
   },
 
+  incorrect_auth : function(){
+    Utils.remove_from_localstorage('auth');
+    Utils.remove_from_localstorage('user');
+    window.location = "/login.html";
+  },
+
   remove_from_localstorage : function (key){
     window.localStorage.removeItem(key);
   },

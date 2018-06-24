@@ -248,9 +248,7 @@ License: You must have a valid license purchased only from themeforest(the above
         get_user_servers_list_inactive()
         get_user_servers_by_number();
       } else {
-        Utils.remove_from_localstorage('auth');
-        Utils.remove_from_localstorage('user');
-        window.location = "/login.html";
+        Utils.incorrect_auth();
       }
     });
   }
@@ -260,9 +258,7 @@ License: You must have a valid license purchased only from themeforest(the above
     $.get("rest/v1/server/" + token).done(function(data) {
       //console.log(data);
       if (data.Authorized == false) {
-        Utils.remove_from_localstorage('auth');
-        Utils.remove_from_localstorage('user');
-        window.location = "/login.html";
+        Utils.incorrect_auth();
       } else {
         $('#all_servers').html("");
         $.each(data, function(index, item) {
@@ -286,9 +282,7 @@ License: You must have a valid license purchased only from themeforest(the above
     $.get("rest/v1/serverinactive/" + token).done(function(data) {
       //console.log(data);
       if (data.Authorized == false) {
-        Utils.remove_from_localstorage('auth');
-        Utils.remove_from_localstorage('user');
-        window.location = "/login.html";
+        Utils.incorrect_auth();
       } else {
         $('#all_inactive_servers').html("");
         $.each(data, function(index, item) {
@@ -308,9 +302,7 @@ License: You must have a valid license purchased only from themeforest(the above
     $.get("rest/v1/serverbynum/" + token).done(function(data) {
       //console.log(data);
       if (data.Authorized == false) {
-        Utils.remove_from_localstorage('auth');
-        Utils.remove_from_localstorage('user');
-        window.location = "/login.html";
+        Utils.incorrect_auth();
       } else {
         $('#serversnumber').html("");
         $('#serversnumber').append(data);
