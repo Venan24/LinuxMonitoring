@@ -243,6 +243,20 @@ Flight::route('GET /provjeritoken/@token', function ($token) {
     }
 });
 
+//Check if somebody is hacking :P
+Flight::route('GET /provjerihakera/@token/@user', function ($token, $user) {
+    try {
+        //$token = Flight::request()->data->token;
+        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $userid = $token['id'];
+        if ($userid != $user){
+          Flight::json(['Hacker' => true]);
+        }
+        //Flight::json(array('Authorized' => true));
+    } catch (Exception $e) {
+        Flight::json(['Authorized' => false, 'Error' => $e->getMessage()]);
+    }
+});
 
 //Viber webhook (handling user request to viber public account)
 Flight::route('POST /new_webhook_page', function () {

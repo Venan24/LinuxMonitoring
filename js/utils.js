@@ -150,6 +150,20 @@ var Utils = {
     window.location = "/login.html";
   },
 
+  check_for_hacker : function(){
+    var auth = Utils.get_from_localstorage('auth');
+    var id = Utils.get_from_localstorage('user').id;
+    $.get("rest/v1/provjerihakera/" + auth + "/" + id).done(function(data) {
+      if (data.Authorized == false){
+        Utils.remove_from_localstorage('auth');
+        Utils.remove_from_localstorage('user');
+        window.location = "/login.html";
+      }else if(data.Hacker == true){
+        window.location = "hackerman.html";
+      }
+    });
+  },
+
   remove_from_localstorage : function (key){
     window.localStorage.removeItem(key);
   },
