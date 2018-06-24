@@ -45,9 +45,14 @@ Flight::route('GET /getauthcodes/@id', function ($id) {
 });
 
 //Function that return data for selected servers
-Flight::route('GET /getmonitordata/@auth', function ($auth) {
-    $data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = :auth ORDER BY id DESC LIMIT 1", [':auth' => $auth]);
-    Flight::json($data);
+Flight::route('GET /getmonitordata/@auth/@token', function ($auth, $token) {
+    try {
+        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = :auth ORDER BY id DESC LIMIT 1", [':auth' => $auth]);
+        Flight::json($data);
+    } catch (Exception $e) {
+        Flight::halt(401, Flight::json(['Authorized' => false, 'Error' => $e->getMessage()]));
+    }
 });
 
 //Function that return monitoring data for selected servers

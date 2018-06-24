@@ -346,19 +346,23 @@ License: You must have a valid license purchased only from themeforest(the above
     var server_name = url.searchParams.get("servername");
     $('#servername').append(server_name);
 
-    $.get("rest/v1/getmonitordata/" + auth).done(function(data) {
+    $.get("rest/v1/getmonitordata/" + auth + "/" + token).done(function(data) {
       //console.log(data);
-      $.each(data, function(index, item) {
-        $('#timeupdated').append(item.timesubmited);
-        $('#cpu').append('<tr><th scope="row">' + item.cpu_model + '</th>' + '<td>' + item.cpu_architecture + '</td>' + '<td>' + item.cpu_cores + '</td>' + '<td>' + item.cpu_threads + '</td>' + '<td>' + item.pid_running +
-          '</td><td><span style="font-weight:bold; color:red;">' + item.cpu_percentage + ' %</span></td></tr>');
-        $('#osinfo').append('<tr><th scope="row">' + item.os_name + '</th>' + '<td>' + item.os_version + '</td>' + '<td>' + item.uptime + ' (HH:MM)</td></tr>');
-        $('#network').append('<tr><th scope="row">' + item.hostname + '</th>' + '<td>' + item.internal_ip + '</td>' + '<td>' + item.external_ip + '</td></tr>');
-        $('#ram').append('<tr><th scope="row">' + item.ram_total + '</th>' + '<td>' + item.ram_used + '</td>' + '<td>' + item.ram_free + '</td>' + '<td>' + item.ram_shared + '</td>' + '<td>' + item.ram_available +
-          '</td><td>' + item.ram_buff + '</td></tr>');
-        $('#swap').append('<tr><th scope="row">' + item.swap_total + '</th>' + '<td>' + item.swap_used + '</td>' + '<td>' + item.swap_free + '</td></tr>');
-        $('#hdd').append('<tr><th scope="row">' + item.total_hdd + '</th>' + '<td>' + item.used_hdd + '</td>' + '<td>' + item.available_hdd + '</td></tr>');
-      });
+      if (data.Authorized != false) {
+        $.each(data, function(index, item) {
+          $('#timeupdated').append(item.timesubmited);
+          $('#cpu').append('<tr><th scope="row">' + item.cpu_model + '</th>' + '<td>' + item.cpu_architecture + '</td>' + '<td>' + item.cpu_cores + '</td>' + '<td>' + item.cpu_threads + '</td>' + '<td>' + item.pid_running +
+            '</td><td><span style="font-weight:bold; color:red;">' + item.cpu_percentage + ' %</span></td></tr>');
+          $('#osinfo').append('<tr><th scope="row">' + item.os_name + '</th>' + '<td>' + item.os_version + '</td>' + '<td>' + item.uptime + ' (HH:MM)</td></tr>');
+          $('#network').append('<tr><th scope="row">' + item.hostname + '</th>' + '<td>' + item.internal_ip + '</td>' + '<td>' + item.external_ip + '</td></tr>');
+          $('#ram').append('<tr><th scope="row">' + item.ram_total + '</th>' + '<td>' + item.ram_used + '</td>' + '<td>' + item.ram_free + '</td>' + '<td>' + item.ram_shared + '</td>' + '<td>' + item.ram_available +
+            '</td><td>' + item.ram_buff + '</td></tr>');
+          $('#swap').append('<tr><th scope="row">' + item.swap_total + '</th>' + '<td>' + item.swap_used + '</td>' + '<td>' + item.swap_free + '</td></tr>');
+          $('#hdd').append('<tr><th scope="row">' + item.total_hdd + '</th>' + '<td>' + item.used_hdd + '</td>' + '<td>' + item.available_hdd + '</td></tr>');
+        });
+      } else {
+        Utils.incorrect_auth();
+      }
     }).fail(function(error) {
       console.log(error.responseJSON.error);
     });
