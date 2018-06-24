@@ -238,6 +238,7 @@ License: You must have a valid license purchased only from themeforest(the above
   } else {
     $.get("rest/v1/provjeritoken/" + token).done(function(data) {
       if (data.Authorized != false) {
+        Utils.check_for_hacker();
         $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
         $('.profile-name').html(Utils.get_from_localstorage('user').name);
         $('#profile-email').html(Utils.get_from_localstorage('user').email);
@@ -247,7 +248,6 @@ License: You must have a valid license purchased only from themeforest(the above
         get_user_servers_list();
         get_user_servers_list_inactive()
         get_user_servers_by_number();
-        Utils.check_for_hacker();
       } else {
         Utils.incorrect_auth();
       }
