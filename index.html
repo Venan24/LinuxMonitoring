@@ -431,8 +431,8 @@ License: You must have a valid license purchased only from themeforest(the above
         return false
       }
 
-      $.get("rest/v1/change_sever_name/" + inputValue + "/" + clickedServerAuth).done(function(data) {
-        if (data != "greskica") {
+      $.get("rest/v1/change_sever_name/" + inputValue + "/" + clickedServerAuth + "/" + token).done(function(data) {
+        if (data.Authorized != false) {
           swal({
             title: "Success!",
             text: "Name chaged",

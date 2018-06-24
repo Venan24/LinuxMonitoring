@@ -72,14 +72,16 @@ Flight::route('GET /crateserver/@servername/@userid', function ($servername, $to
 });
 
 // Function that change server name
-Flight::route('GET /change_sever_name/@newservername/@authcode', function ($newservername, $authcode) {
-    $unos = Flight::pm()->change_server_name($newservername, $authcode);
-    if ($unos) {
-        $status = $newservername;
-    } else {
-        $status = "greskica";
+Flight::route('GET /change_sever_name/@newservername/@authcode/@token', function ($newservername, $authcode, $token) {
+    try {
+        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $unos = Flight::pm()->change_server_name($newservername, $authcode);
+        if ($unos) {
+            Flight::json($newservername);
+        }
+    } catch (Exception $e) {
+        Flight::json(['Authorized' => false, 'Error' => $e->getMessage()]);
     }
-    Flight::json($status);
 });
 
 // Function that remove srever
