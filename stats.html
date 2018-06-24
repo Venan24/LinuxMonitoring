@@ -145,7 +145,8 @@ License: You must have a valid license purchased only from themeforest(the above
                     <div class="portlet-title tabbable-line">
                       <div class="caption caption-md">
                         <i class="icon-globe theme-font hide"></i>
-                        <span class="caption-subject font-blue-madison bold uppercase">Data for: <span style="color:#BD0C0C; font-size: 20px;" id="servername"></span><span> server. Last time updated: </span><span style="color:#BD0C0C; font-size: 20px;" id="timeupdated"></span>
+                        <span class="caption-subject font-blue-madison bold uppercase">Data for: <span style="color:#BD0C0C; font-size: 20px;" id="servername"></span><span> server. Last time updated: </span><span style="color:#BD0C0C; font-size: 20px;"
+                          id="timeupdated"></span>
                       </div>
                     </div>
 
@@ -286,13 +287,23 @@ License: You must have a valid license purchased only from themeforest(the above
 </body>
 
 <script type="text/javascript">
+  var token = Utils.get_from_localstorage('auth');
   if (!Utils.get_from_localstorage('user')) {
     window.location = "/login.html";
   } else {
-    $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
-    $('.profile-name').html(Utils.get_from_localstorage('user').name);
-    $('#profile-email').html(Utils.get_from_localstorage('user').email);
-    $('body').show();
+    $.get("rest/v1/provjeritoken/" + token).done(function(data) {
+      if (data.Authorized != false) {
+        $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
+        $('.profile-name').html(Utils.get_from_localstorage('user').name);
+        $('#profile-email').html(Utils.get_from_localstorage('user').email);
+        $('body').show();
+
+        //GET DATA
+        get_data_for_opened_server();
+      } else {
+        Utils.incorrect_auth();
+      }
+    });
   }
 
   function create_new_server() {
@@ -309,11 +320,16 @@ License: You must have a valid license purchased only from themeforest(the above
         swal.showInputError("You need to write something!");
         return false
       }
-      var userID = Utils.get_from_localstorage('user').id;
-      $.get("rest/v1/crateserver/" + inputValue + "/" + userID).done(function(data) {
-        console.log(data);
-        if (data != "greskica") {
-          swal("Auth: " + data, "Remeber to save your auth code!!!", "success");
+      $.get("rest/v1/crateserver/" + inputValue + "/" + token).done(function(data) {
+        //console.log(data);
+        if (data.Authorized != false) {
+          swal({
+            title: "Authentification Code: " + data,
+            type: "info",
+            confirmButtonClass: "btn-info",
+            confirmButtonText: "Close",
+            closeOnConfirm: true
+          });
         } else {
           swal("Error!", "Error in: " + data, "error");
         }
@@ -335,11 +351,11 @@ License: You must have a valid license purchased only from themeforest(the above
       $.each(data, function(index, item) {
         $('#timeupdated').append(item.timesubmited);
         $('#cpu').append('<tr><th scope="row">' + item.cpu_model + '</th>' + '<td>' + item.cpu_architecture + '</td>' + '<td>' + item.cpu_cores + '</td>' + '<td>' + item.cpu_threads + '</td>' + '<td>' + item.pid_running +
-          '</td><td><span style="font-weight:bold; color:red;">'+ item.cpu_percentage +' %</span></td></tr>');
+          '</td><td><span style="font-weight:bold; color:red;">' + item.cpu_percentage + ' %</span></td></tr>');
         $('#osinfo').append('<tr><th scope="row">' + item.os_name + '</th>' + '<td>' + item.os_version + '</td>' + '<td>' + item.uptime + ' (HH:MM)</td></tr>');
         $('#network').append('<tr><th scope="row">' + item.hostname + '</th>' + '<td>' + item.internal_ip + '</td>' + '<td>' + item.external_ip + '</td></tr>');
         $('#ram').append('<tr><th scope="row">' + item.ram_total + '</th>' + '<td>' + item.ram_used + '</td>' + '<td>' + item.ram_free + '</td>' + '<td>' + item.ram_shared + '</td>' + '<td>' + item.ram_available +
-          '</td><td>'+ item.ram_buff +'</td></tr>');
+          '</td><td>' + item.ram_buff + '</td></tr>');
         $('#swap').append('<tr><th scope="row">' + item.swap_total + '</th>' + '<td>' + item.swap_used + '</td>' + '<td>' + item.swap_free + '</td></tr>');
         $('#hdd').append('<tr><th scope="row">' + item.total_hdd + '</th>' + '<td>' + item.used_hdd + '</td>' + '<td>' + item.available_hdd + '</td></tr>');
       });
@@ -347,7 +363,6 @@ License: You must have a valid license purchased only from themeforest(the above
       console.log(error.responseJSON.error);
     });
   }
-get_data_for_opened_server();
 </script>
 
 </html>
