@@ -181,6 +181,19 @@ Flight::route('POST /checkauth', function () {
     }
 });
 
+//return graph data
+Flight::route('GET /getgraph', function () {
+  try {
+      //$tokenID = (array)JWT::decode($t oken, Config::JWT_SECRET, ['HS256'])->user;
+      //$userid = $tokenID['id']; ORDER BY id DESC LIMIT 36
+      //$data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = :id ", [':id' => $userid]);
+      $data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = '5b282b7df1c22' ORDER BY id DESC LIMIT 36", []);
+      Flight::json($data);
+  } catch (Exception $e) {
+    Flight::json($e);
+  }
+});
+
 Flight::route('POST /login', function () {
     $email = Flight::request()->data->email;
     $user = Flight::pm()->get_user_by_email($email);
