@@ -38,12 +38,6 @@ Flight::route('GET /serverinactive/@id', function ($token) {
     }
 });
 
-// Function return all servers that belong to specific user to Get auth codes page
-Flight::route('GET /getauthcodes/@id', function ($id) {
-    $data = Flight::pm()->query("SELECT server_id, server_name, auth_code FROM servers WHERE user_id = :id ", [':id' => $id]);
-    Flight::json($data);
-});
-
 //Function that return data for selected servers
 Flight::route('GET /getmonitordata/@auth/@token', function ($auth, $token) {
     try {
