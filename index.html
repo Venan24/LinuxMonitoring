@@ -262,6 +262,7 @@ License: You must have a valid license purchased only from themeforest(the above
         Utils.incorrect_auth();
       } else {
         $('#all_servers').html("");
+        $('#all_servers').append("<thead><tr><th scope='col'>#</th><th scope='col'>Server Name</th><th scope='col'>OS</th><th scope='col'>OS Version</th><th scope='col'>IP</th><th scope='col'>Action</th></tr></thead>");
         $.each(data, function(index, item) {
           $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' +
             '<td>' + item.os_version +
