@@ -267,7 +267,7 @@ License: You must have a valid license purchased only from themeforest(the above
           $('#all_servers').append('<tr><th scope="row">' + item.server_id + '</th>' + '<td style="cursor:pointer;" id="' + item.auth_code + '" onClick="return_auth(this.id)">' + item.server_name + '</td>' + '<td>' + item.os_name + '</td>' +
             '<td>' + item.os_version +
             '</td>' + '<td>' + item.external_ip +
-            '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a href="stats.html?auth=' + item.auth_code + '&servername=' + item
+            '</td><td><a id="' + item.auth_code + '" href="#" onClick="change_sever_name(this.id)" class="btn btn-primary"><span class="icon-wrench"></span> Change Name</a><a href="graphstats.html?auth=' + item.auth_code + '&servername=' + item
             .server_name +
             '" class="btn btn-success"><span class="icon-graph"></span> Stats</a><a id="' + item.auth_code +
             '" href="#" onClick="remove_selected_server(this.id)" class="btn btn-danger"><span class="icon-trash"></span> Remove</a></td></tr>'

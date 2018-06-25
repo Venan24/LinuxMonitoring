@@ -41,7 +41,7 @@ License: You must have a valid license purchased only from themeforest(the above
   <link href="css/custom.min.css" rel="stylesheet" type="text/css" />
   <link href="bower_components/bootstrap-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
   <!-- END THEME LAYOUT STYLES -->
-  <link rel="shortcut icon" href="favicon.ico" /> </head>
+</head>
 
 <!--  <style>
 			.chart-container {
@@ -122,8 +122,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     <div class="portlet-title tabbable-line">
                       <div class="caption caption-md">
                         <i class="icon-globe theme-font hide"></i>
-                        <span class="caption-subject font-blue-madison bold uppercase">Data for: <span style="color:#BD0C0C; font-size: 20px;" id="servername"></span><span> server. Last time updated: </span><span style="color:#BD0C0C; font-size: 20px;"
-                          id="timeupdated"></span>
+                        <span class="caption-subject font-blue-madison bold uppercase">Data for: <span style="color:#BD0C0C; font-size: 20px;" id="servername"></span>
                       </div>
                     </div>
                     <div class="row">
@@ -131,9 +130,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         <div class="panel panel-primary">
                           <div class="panel-heading">Machine Info</div>
                           <div class="panel-body">
-                            <center>
-		                            tabelica
-		                        </center>
+                            <div id="serverinfo"></div>
                           </div>
                         </div>
                       </div>
@@ -142,10 +139,10 @@ License: You must have a valid license purchased only from themeforest(the above
                           <div class="panel-heading">CPU Stats</div>
                           <div class="panel-body">
                             <center>
-		                            <div class="chart-container">
-			                               <canvas id="cpugraph"></canvas>
-		                            </div>
-		                        </center>
+                              <div class="chart-container">
+                                <canvas id="cpugraph"></canvas>
+                              </div>
+                            </center>
                           </div>
                         </div>
                       </div>
@@ -154,22 +151,23 @@ License: You must have a valid license purchased only from themeforest(the above
                           <div class="panel-heading">RAM Stats</div>
                           <div class="panel-body">
                             <center>
-		                            <div class="chart-container">
-			                               <canvas id="ramgraph"></canvas>
-		                            </div>
-		                        </center>
+                              <div class="chart-container">
+                                <canvas id="ramgraph"></canvas>
+                              </div>
+                            </center>
                           </div>
                         </div>
                       </div>
+                    </div>
                     <div class="row">
                       <div class="col-sm-12 col-lg-4">
                         <div class="panel panel-primary">
                           <div class="panel-heading">SWAP Stats</div>
                           <div class="panel-body">
                             <center>
-                                <div class="chart-container">
-                                     <canvas id="swapgraph"></canvas>
-                                </div>
+                              <div class="chart-container">
+                                <canvas id="swapgraph"></canvas>
+                              </div>
                             </center>
                           </div>
                         </div>
@@ -179,10 +177,10 @@ License: You must have a valid license purchased only from themeforest(the above
                           <div class="panel-heading">HDD Stats</div>
                           <div class="panel-body">
                             <center>
-		                            <div class="chart-container">
-			                               <canvas id="hddgraph"></canvas>
-		                            </div>
-		                        </center>
+                              <div class="chart-container">
+                                <canvas id="hddgraph"></canvas>
+                              </div>
+                            </center>
                           </div>
                         </div>
                       </div>
@@ -191,9 +189,9 @@ License: You must have a valid license purchased only from themeforest(the above
                           <div class="panel-heading">PID Stats</div>
                           <div class="panel-body">
                             <center>
-                                <div class="chart-container">
-                                     <canvas id="pidgraph"></canvas>
-                                </div>
+                              <div class="chart-container">
+                                <canvas id="pidgraph"></canvas>
+                              </div>
                             </center>
                           </div>
                         </div>
@@ -223,7 +221,7 @@ License: You must have a valid license purchased only from themeforest(the above
   <script src="js/utils.js" type="text/javascript"></script>
   <script src="js/login.js" type="text/javascript"></script>
   <script src="bower_components/bootstrap-sweetalert/dist/sweetalert.js"></script>
-	<script type="text/javascript" src="js/Chart.min.js"></script>
+  <script type="text/javascript" src="js/Chart.min.js"></script>
 </body>
 
 <script type="text/javascript">
@@ -287,49 +285,34 @@ License: You must have a valid license purchased only from themeforest(the above
     var server_name = url.searchParams.get("servername");
     $('#servername').append(server_name);
 
-    $.get("rest/v1/getmonitordata/" + auth + "/" + token).done(function(data) {
-      //console.log(data);
+
+    $.get("rest/v1/getmachineinfo/" + auth + "/" + token).done(function(data) {
       if (data.Authorized != false) {
         $.each(data, function(index, item) {
-          $('#timeupdated').append(item.timesubmited);
-          $('#cpu').append('<tr><th scope="row">' + item.cpu_model + '</th>' + '<td>' + item.cpu_architecture + '</td>' + '<td>' + item.cpu_cores + '</td>' + '<td>' + item.cpu_threads + '</td>' + '<td>' + item.pid_running +
-            '</td><td><span style="font-weight:bold; color:red;">' + item.cpu_percentage + ' %</span></td></tr>');
-          $('#osinfo').append('<tr><th scope="row">' + item.os_name + '</th>' + '<td>' + item.os_version + '</td>' + '<td>' + item.uptime + ' (HH:MM)</td></tr>');
-          $('#network').append('<tr><th scope="row">' + item.hostname + '</th>' + '<td>' + item.internal_ip + '</td>' + '<td>' + item.external_ip + '</td></tr>');
-          $('#ram').append('<tr><th scope="row">' + item.ram_total + '</th>' + '<td>' + item.ram_used + '</td>' + '<td>' + item.ram_free + '</td>' + '<td>' + item.ram_shared + '</td>' + '<td>' + item.ram_available +
-            '</td><td>' + item.ram_buff + '</td></tr>');
-          $('#swap').append('<tr><th scope="row">' + item.swap_total + '</th>' + '<td>' + item.swap_used + '</td>' + '<td>' + item.swap_free + '</td></tr>');
-          $('#hdd').append('<tr><th scope="row">' + item.total_hdd + '</th>' + '<td>' + item.used_hdd + '</td>' + '<td>' + item.available_hdd + '</td></tr>');
+          $('#serverinfo').append("<table class='table'><tbody><tr><th scope='row'>OS (version): </th><td>"+item.os_name+" ("+item.os_version+")</td></tr><tr><th scope='row'>CPU: </th><td>"+item.cpu_model+"</td></tr><tr><th scope='row'>CPU Architecture </th><td>"+item.cpu_architecture+"</td></tr><tr><th scope='row'>CPU Cores (Threads): </th><td>"+item.cpu_cores+" ("+item.cpu_threads+")</td></tr><tr><th scope='row'>Hostname</th><td>"+item.hostname+"</td></tr><tr><th scope='row'>IP Internale (Extrernal): </th><td>"+item.internal_ip+" ("+item.external_ip+")</td></tr></tbody></table>");
         });
       } else {
         Utils.incorrect_auth();
       }
-    }).fail(function(error) {
-      console.log(error.responseJSON.error);
     });
-  }
 
-  $(document).ready(function() {
-    $.ajax({
-      url: "http://localhost.monitorbeta.com/rest/v1/getgraph",
-      type: "GET",
-      success: function(data) {
-        //console.log(data);
-
+    $.get("rest/v1/getgraph/" + auth + "/" + token).done(function(data) {
+      //console.log(data);
+      if (data.Authorized != false) {
         var timesubmited = [];
         var cpu_percentage = [];
         var ram_used = [];
         var ram_shared = [];
         var ram_available = [];
         var ram_buff = [];
-  			var swap_total = [];
+        var swap_total = [];
         var swap_used = [];
-  			var total_hdd = [];
+        var total_hdd = [];
         var swap_free = [];
         var used_hdd = [];
         var available_hdd = [];
         var pid_running = [];
-  			var ram_total = []
+        var ram_total = []
 
         for (var i in data) {
           timesubmited.push(data[i].timesubmited);
@@ -339,14 +322,14 @@ License: You must have a valid license purchased only from themeforest(the above
           ram_available.push(data[i].ram_available);
           ram_buff.push(data[i].ram_buff);
 
-  				swap_total.push(data[i].swap_total);
+          swap_total.push(data[i].swap_total);
           swap_used.push(data[i].swap_used);
           swap_free.push(data[i].swap_free);
-  				total_hdd.push(data[i].total_hdd);
+          total_hdd.push(data[i].total_hdd);
           used_hdd.push(data[i].used_hdd);
           available_hdd.push(data[i].available_hdd);
           pid_running.push(data[i].pid_running);
-  				ram_total.push(data[i].ram_total)
+          ram_total.push(data[i].ram_total)
         }
 
         var chartdata = {
@@ -479,132 +462,130 @@ License: You must have a valid license purchased only from themeforest(the above
           }]
         };
 
-  			var ramdata = {
-  				labels: timesubmited,
-  				datasets: [
-  					{
-  						label: "RAM Used",
-  						fill: false,
-  						lineTension: 0.1,
-  						backgroundColor: "rgba(29, 202, 255, 0.75)",
-  						borderColor: "rgba(29, 202, 255, 1)",
-  						pointHoverBackgroundColor: "rgba(29, 202, 255, 1)",
-  						pointHoverBorderColor: "rgba(29, 202, 255, 1)",
-  						borderWidth: 5,
-  						data: ram_used
-  					},
-  					{
-  						label: "RAM Shared",
-  						fill: false,
-  						lineTension: 0.1,
-  						backgroundColor: "rgba(59, 89, 152, 0.75)",
-  						borderColor: "rgba(59, 89, 152, 1)",
-  						pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
-  						pointHoverBorderColor: "rgba(59, 89, 152, 1)",
-  						borderWidth: 5,
-  						data: ram_shared
-  					},
-  					{
-  						label: "RAM Available",
-  						fill: false,
-  						lineTension: 0.1,
-  						backgroundColor: "rgba(96, 75, 15, 0.75)",
-  						borderColor: "rgba(96, 75, 15, 1)",
-  						pointHoverBackgroundColor: "rgba(96, 75, 15, 1)",
-  						pointHoverBorderColor: "rgba(96, 75, 15, 1)",
-  						borderWidth: 5,
-  						data: ram_available
-  					},
-  					{
-  						label: "RAM Buffered",
-  						fill: false,
-  						lineTension: 0.1,
-  						backgroundColor: "rgba(35, 176, 15, 0.75)",
-  						borderColor: "rgba(35, 176, 15, 1)",
-  						pointHoverBackgroundColor: "rgba(35, 176, 15, 1)",
-  						pointHoverBorderColor: "rgba(35, 176, 15, 1)",
-  						borderWidth: 5,
-  						data: ram_buff
-  					}
-  				]
-  			};
+        var ramdata = {
+          labels: timesubmited,
+          datasets: [{
+              label: "RAM Used",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(29, 202, 255, 0.75)",
+              borderColor: "rgba(29, 202, 255, 1)",
+              pointHoverBackgroundColor: "rgba(29, 202, 255, 1)",
+              pointHoverBorderColor: "rgba(29, 202, 255, 1)",
+              borderWidth: 5,
+              data: ram_used
+            },
+            {
+              label: "RAM Shared",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(59, 89, 152, 0.75)",
+              borderColor: "rgba(59, 89, 152, 1)",
+              pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
+              pointHoverBorderColor: "rgba(59, 89, 152, 1)",
+              borderWidth: 5,
+              data: ram_shared
+            },
+            {
+              label: "RAM Available",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(96, 75, 15, 0.75)",
+              borderColor: "rgba(96, 75, 15, 1)",
+              pointHoverBackgroundColor: "rgba(96, 75, 15, 1)",
+              pointHoverBorderColor: "rgba(96, 75, 15, 1)",
+              borderWidth: 5,
+              data: ram_available
+            },
+            {
+              label: "RAM Buffered",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(35, 176, 15, 0.75)",
+              borderColor: "rgba(35, 176, 15, 1)",
+              pointHoverBackgroundColor: "rgba(35, 176, 15, 1)",
+              pointHoverBorderColor: "rgba(35, 176, 15, 1)",
+              borderWidth: 5,
+              data: ram_buff
+            }
+          ]
+        };
 
-  			var swapdata = {
-  				labels: timesubmited,
-  				datasets: [
-  					{
-  						label: "SWAP Used",
-  						fill: false,
-  						lineTension: 0.1,
-  						backgroundColor: "rgba(59, 89, 152, 0.75)",
-  						borderColor: "rgba(59, 89, 152, 1)",
-  						pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
-  						pointHoverBorderColor: "rgba(59, 89, 152, 1)",
-  						borderWidth: 5,
-  						data: swap_used
-  					},
-  					{
-  						label: "SWAP Free",
-  						fill: false,
-  						lineTension: 0.1,
-  						backgroundColor: "rgba(96, 75, 15, 0.75)",
-  						borderColor: "rgba(96, 75, 15, 1)",
-  						pointHoverBackgroundColor: "rgba(96, 75, 15, 1)",
-  						pointHoverBorderColor: "rgba(96, 75, 15, 1)",
-  						borderWidth: 5,
-  						data: swap_free
-  					}
-  				]
-  			};
+        var swapdata = {
+          labels: timesubmited,
+          datasets: [{
+              label: "SWAP Used",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(59, 89, 152, 0.75)",
+              borderColor: "rgba(59, 89, 152, 1)",
+              pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
+              pointHoverBorderColor: "rgba(59, 89, 152, 1)",
+              borderWidth: 5,
+              data: swap_used
+            },
+            {
+              label: "SWAP Free",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(96, 75, 15, 0.75)",
+              borderColor: "rgba(96, 75, 15, 1)",
+              pointHoverBackgroundColor: "rgba(96, 75, 15, 1)",
+              pointHoverBorderColor: "rgba(96, 75, 15, 1)",
+              borderWidth: 5,
+              data: swap_free
+            }
+          ]
+        };
 
-  			var hdddata = {
-  				labels: timesubmited,
-  				datasets: [
-  					{
-  						label: "HDD Used",
-  						fill: false,
-  						lineTension: 0.1,
-  						backgroundColor: "rgba(59, 89, 152, 0.75)",
-  						borderColor: "rgba(59, 89, 152, 1)",
-  						pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
-  						pointHoverBorderColor: "rgba(59, 89, 152, 1)",
-  						borderWidth: 5,
-  						data: used_hdd
-  					},
-  					{
-  						label: "HDD Free",
-  						fill: false,
-  						lineTension: 0.1,
-  						backgroundColor: "rgba(96, 75, 15, 0.75)",
-  						borderColor: "rgba(96, 75, 15, 1)",
-  						pointHoverBackgroundColor: "rgba(96, 75, 15, 1)",
-  						pointHoverBorderColor: "rgba(96, 75, 15, 1)",
-  						borderWidth: 5,
-  						data: available_hdd
-  					}
-  				]
-  			};
+        var hdddata = {
+          labels: timesubmited,
+          datasets: [{
+              label: "HDD Used",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(59, 89, 152, 0.75)",
+              borderColor: "rgba(59, 89, 152, 1)",
+              pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
+              pointHoverBorderColor: "rgba(59, 89, 152, 1)",
+              borderWidth: 5,
+              data: used_hdd
+            },
+            {
+              label: "HDD Free",
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: "rgba(96, 75, 15, 0.75)",
+              borderColor: "rgba(96, 75, 15, 1)",
+              pointHoverBackgroundColor: "rgba(96, 75, 15, 1)",
+              pointHoverBorderColor: "rgba(96, 75, 15, 1)",
+              borderWidth: 5,
+              data: available_hdd
+            }
+          ]
+        };
 
-  			var piddata = {
-  				labels: timesubmited,
-  				datasets: [{
-  					label: "PIDs",
-  					fill: false,
-  					lineTension: 0.1,
-  					backgroundColor: "rgba(211, 72, 54, 0.75)",
-  					borderColor: "rgba(211, 72, 54, 1)",
-  					pointHoverBackgroundColor: "rgba(211, 72, 54, 1)",
-  					pointHoverBorderColor: "rgba(211, 72, 54, 1)",
-  					borderWidth: 5,
-  					data: pid_running
-  				}]
-  			};
+        var piddata = {
+          labels: timesubmited,
+          datasets: [{
+            label: "PIDs",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(211, 72, 54, 0.75)",
+            borderColor: "rgba(211, 72, 54, 1)",
+            pointHoverBackgroundColor: "rgba(211, 72, 54, 1)",
+            pointHoverBorderColor: "rgba(211, 72, 54, 1)",
+            borderWidth: 5,
+            data: pid_running
+          }]
+        };
 
         var cpu_ctx = $("#cpugraph");
-  			var ram_ctx = $("#ramgraph");
-  			var swap_ctx = $("#swapgraph");
-  			var hdd_ctx = $("#hddgraph");
-  			var pid_ctx = $("#pidgraph");
+
+        var ram_ctx = $("#ramgraph");
+        var swap_ctx = $("#swapgraph");
+        var hdd_ctx = $("#hddgraph");
+        var pid_ctx = $("#pidgraph");
 
         var CpuGraph = new Chart(cpu_ctx, {
           type: 'line',
@@ -628,95 +609,101 @@ License: You must have a valid license purchased only from themeforest(the above
           }
         });
 
-  			var RamGraph = new Chart(ram_ctx, {
+        var RamGraph = new Chart(ram_ctx, {
           type: 'line',
           data: ramdata,
-  				options: {
-  					scales: {
-  						yAxes: [{
-  							ticks: {
-  								stepSize: 1,
-  								min: 0,
-  								max: Math.max.apply(Math, ram_total),
-  								callback: function(value){return value+ "GB"}
-  							},
-  							scaleLabel: {
-  								display: true,
-  								labelString: "Gigabytes"
-  							}
-  						}]
-  					}
-  				}
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  stepSize: 1,
+                  min: 0,
+                  max: Math.max.apply(Math, ram_total),
+                  callback: function(value) {
+                    return value + "GB"
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: "Gigabytes"
+                }
+              }]
+            }
+          }
         });
 
-  			var SwapGraph = new Chart(swap_ctx, {
+        var SwapGraph = new Chart(swap_ctx, {
           type: 'line',
           data: swapdata,
-  				options: {
-  					scales: {
-  						yAxes: [{
-  							ticks: {
-  								stepSize: 1,
-  								min: 0,
-  								max: Math.max.apply(Math, swap_total),
-  								callback: function(value){return value+ "GB"}
-  							},
-  							scaleLabel: {
-  								display: true,
-  								labelString: "Gigabytes"
-  							}
-  						}]
-  					}
-  				}
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  stepSize: 1,
+                  min: 0,
+                  max: Math.max.apply(Math, swap_total),
+                  callback: function(value) {
+                    return value + "GB"
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: "Gigabytes"
+                }
+              }]
+            }
+          }
         });
 
-  			var HddGraph = new Chart(hdd_ctx, {
+        var HddGraph = new Chart(hdd_ctx, {
           type: 'line',
           data: hdddata,
-  				options: {
-  					scales: {
-  						yAxes: [{
-  							ticks: {
-  								stepSize: 50,
-  								min: 0,
-  								max: Math.max.apply(Math, total_hdd),
-  								callback: function(value){return value+ "GB"}
-  							},
-  							scaleLabel: {
-  								display: true,
-  								labelString: "Gigabytes"
-  							}
-  						}]
-  					}
-  				}
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  stepSize: 50,
+                  min: 0,
+                  max: Math.max.apply(Math, total_hdd),
+                  callback: function(value) {
+                    return value + "GB"
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: "Gigabytes"
+                }
+              }]
+            }
+          }
         });
 
-  			var PidGraph = new Chart(pid_ctx, {
+        var PidGraph = new Chart(pid_ctx, {
           type: 'line',
           data: piddata,
-  				options: {
-  					scales: {
-  						yAxes: [{
-  							ticks: {
-  								stepSize: 100,
-  								min: 0,
-  								max: Math.max.apply(Math, pid_running)+200
-  							},
-  							scaleLabel: {
-  								display: true,
-  								labelString: "Running PIDs"
-  							}
-  						}]
-  					}
-  				}
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  stepSize: 100,
+                  min: 0,
+                  max: Math.max.apply(Math, pid_running) + 200
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: "Running PIDs"
+                }
+              }]
+            }
+          }
         });
-      },
-      error: function(data) {
-
+      } else {
+        Utils.incorrect_auth();
       }
+    }).fail(function(error) {
+      console.log(error.responseJSON.error);
     });
-  });
-
+  }
 </script>
 
 </html>

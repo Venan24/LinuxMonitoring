@@ -181,13 +181,23 @@ Flight::route('POST /checkauth', function () {
     }
 });
 
-//return graph data
-Flight::route('GET /getgraph', function () {
+//Get graph data
+Flight::route('GET /getgraph/@auth/@token', function ($auth, $token) {
   try {
-      //$tokenID = (array)JWT::decode($t oken, Config::JWT_SECRET, ['HS256'])->user;
-      //$userid = $tokenID['id']; ORDER BY id DESC LIMIT 36
-      //$data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = :id ", [':id' => $userid]);
-      $data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = '5b282b7df1c22' ORDER BY id ASC LIMIT 36", []);
+      $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+      $data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = :auth ORDER BY id ASC LIMIT 36", [':auth' => $auth]);
+      Flight::json($data);
+  } catch (Exception $e) {
+    Flight::json($e);
+  }
+});
+
+//Get machine info
+Flight::route('GET /getmachineinfo/@auth/@token', function ($auth, $token) {
+  try {
+      $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+      $userid = $token['id'];
+      $data = Flight::pm()->query("SELECT id, os_name, os_version, cpu_model, cpu_architecture, cpu_cores, cpu_threads, hostname, internal_ip, external_ip, uptime FROM Monitoring WHERE auth_code = :auth ORDER BY id DESC LIMIT 1", [':auth' => $auth]);
       Flight::json($data);
   } catch (Exception $e) {
     Flight::json($e);
