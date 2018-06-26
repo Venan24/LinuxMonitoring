@@ -179,7 +179,7 @@ Flight::route('POST /checkauth', function () {
 Flight::route('GET /getgraph/@auth/@token', function ($auth, $token) {
   try {
       $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
-      $data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = :auth ORDER BY id ASC LIMIT 36", [':auth' => $auth]);
+      $data = Flight::pm()->query("SELECT * FROM Monitoring WHERE auth_code = :auth ORDER BY id ASC LIMIT 12", [':auth' => $auth]);
       Flight::json($data);
   } catch (Exception $e) {
     Flight::json($e);
