@@ -26,7 +26,7 @@ License: You must have a valid license purchased only from themeforest(the above
   <meta content="" name="author" />
   <!-- BEGIN GLOBAL MANDATORY STYLES -->
   <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-  <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
   <link href="css/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
   <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
@@ -125,9 +125,17 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- SIDEBAR MENU -->
                 <div class="profile-usermenu">
                   <ul class="nav">
-                    <li class="active" style="text-align: center;">
-                      <a href="mailto: it-center@ibu.edu.ba" style="font-size: 14px;">
-                                                    <i class="icon-info"></i> For any questions please contact <br>venanosmic24@gmail.com </a>
+                    <li class="active">
+                      <a href="index.html" style="font-size: 14px;">
+                        <i class="fas fa-tachometer-alt"></i> My Dashboard </a>
+                    </li>
+                    <li>
+                      <a href="javascript:;create_new_server();" style="font-size: 14px;">
+                        <i class="fas fa-plus-circle"></i> Create New Machine </a>
+                    </li>
+                    <li>
+                      <a href="javascript:;Login.logout()" style="font-size: 14px;">
+                        <i class="fas fa-sign-out-alt"></i> Log Out </a>
                     </li>
                   </ul>
                 </div>
@@ -152,13 +160,13 @@ License: You must have a valid license purchased only from themeforest(the above
                     <div class="row list-separated profile-stat">
                       <div class="col-md-12 ">
                         <div class="uppercase profile-stat-title" id="serversnumber"></div>
-                        <div class="uppercase profile-stat-text">Servers</div>
+                        <div class="uppercase profile-stat-text" id="serverstext"></div>
                       </div>
                     </div>
 
-                    <div class="portlet-body">
+                    <div id="main_tables" class="portlet-body" style="display:none;">
                       <div class="tab-content">
-                        <div id="accordion1" class="panel-group">
+                        <div class="panel-group">
                           <div class="panel panel-primary">
                             <div class="panel-heading">All active servers</div>
                             <div class="panel-body">
@@ -241,8 +249,6 @@ License: You must have a valid license purchased only from themeforest(the above
         $('body').show();
 
         //GET DATA
-        get_user_servers_list();
-        get_user_servers_list_inactive()
         get_user_servers_by_number();
       } else {
         Utils.incorrect_auth();
@@ -298,12 +304,22 @@ License: You must have a valid license purchased only from themeforest(the above
   //Get number of all servers that belong to user
   function get_user_servers_by_number() {
     $.get("rest/v1/serverbynum/" + token).done(function(data) {
-      //console.log(data);
       if (data.Authorized == false) {
         Utils.incorrect_auth();
       } else {
-        $('#serversnumber').html("");
-        $('#serversnumber').append(data);
+        if (data.Servers == 0){
+          $('#main_tables').hide();
+          $('#serverstext').html("");
+          $('#serversnumber').html("");
+          $('#serversnumber').html("<p>Looks like you do not have any machines registered.<br><b><a href='javascript:;create_new_server();'>CLICK HERE</a></b> to create new one.</p>");
+        }else{
+          $('#serversnumber').html("");
+          $('#serversnumber').append(data.Servers);
+          $('#serverstext').html("Servers");
+          $('#main_tables').show();
+          get_user_servers_list();
+          get_user_servers_list_inactive()
+        }
       }
     }).fail(function(error) {
       console.log(error.responseJSON.error);
@@ -336,8 +352,6 @@ License: You must have a valid license purchased only from themeforest(the above
               closeOnConfirm: true
             },
             function() {
-              get_user_servers_list();
-              get_user_servers_list_inactive()
               get_user_servers_by_number();
             });
         } else {

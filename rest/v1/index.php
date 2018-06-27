@@ -103,7 +103,7 @@ Flight::route('GET /serverbynum/@id', function ($token) {
         $userid = $token['id'];
         $data = Flight::pm()->query("SELECT * FROM servers WHERE user_id = :id ", [':id' => $userid]);
         $row_cnt = count($data);
-        Flight::json($row_cnt);
+        Flight::json(['Servers' => $row_cnt]);
     } catch (Exception $e) {
         Flight::halt(401, Flight::json(['Authorized' => false, 'Error' => $e->getMessage()]));
     }
