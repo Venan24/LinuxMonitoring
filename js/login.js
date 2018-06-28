@@ -13,6 +13,7 @@ var Login = {
 
     logout : function(){
       Utils.remove_from_localstorage('user');
+      Utils.remove_from_localstorage('auth');
       window.location="/login.html";
     },
 
