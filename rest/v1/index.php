@@ -198,6 +198,12 @@ Flight::route('GET /getmachineinfo/@auth/@token', function ($auth, $token) {
   }
 });
 
+Flight::route('GET /download/@auth', function ($auth) {
+  header('Content-type: text/plain');
+  header('Content-Disposition: attachment; filename="main.py"');
+  echo "Python Script: ".$auth;
+});
+
 Flight::route('POST /login', function () {
     $email = Flight::request()->data->email;
     $user = Flight::pm()->get_user_by_email($email);
