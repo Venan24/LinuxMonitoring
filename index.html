@@ -240,7 +240,7 @@ License: You must have a valid license purchased only from themeforest(the above
   if (!Utils.get_from_localstorage('user')) {
     window.location = "/login.html";
   } else {
-    $.get("rest/v1/provjeritoken",{authtoken: token}).done(functsion(data) {
+    $.get("rest/v1/provjeritoken",{authtoken: token}).done(function(data) {
       if (data.Authorized != false) {
         Utils.check_for_hacker();
         $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
@@ -258,7 +258,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
   //Get all servers that running script (at least once)
   function get_user_servers_list() {
-    $.get("rest/v1/server/" + token).done(function(data) {
+    $.get("rest/v1/server", {authtoken: token}).done(function(data) {
       //console.log(data);
       if (data.Authorized == false) {
         Utils.incorrect_auth();
@@ -283,7 +283,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
   //Get all inactive servers
   function get_user_servers_list_inactive() {
-    $.get("rest/v1/serverinactive/" + token).done(function(data) {
+    $.get("rest/v1/serverinactive", {authtoken: token}).done(function(data) {
       //console.log(data);
       if (data.Authorized == false) {
         Utils.incorrect_auth();
@@ -303,7 +303,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
   //Get number of all servers that belong to user
   function get_user_servers_by_number() {
-    $.get("rest/v1/serverbynum/" + token).done(function(data) {
+    $.get("rest/v1/serverbynum", {authtoken: token}).done(function(data) {
       if (data.Authorized == false) {
         Utils.incorrect_auth();
       } else {
@@ -375,7 +375,7 @@ License: You must have a valid license purchased only from themeforest(the above
         closeOnConfirm: false
       },
       function() {
-        $.get("rest/v1/remove_server/" + clickedServerAuth + "/" + token).done(function(data) {
+        $.get("rest/v1/remove_server",{authtoken: token, serverauth: clickedServerAuth}).done(function(data) {
           if (data.Authorized != false) {
             swal({
               title: "Deleted!",
@@ -443,7 +443,7 @@ License: You must have a valid license purchased only from themeforest(the above
         return false
       }
 
-      $.get("rest/v1/change_sever_name/" + inputValue + "/" + clickedServerAuth + "/" + token).done(function(data) {
+      $.get("rest/v1/change_sever_name",{authtoken: token, serverauth: clickedServerAuth, newname: inputValue}).done(function(data) {
         if (data.Authorized != false) {
           swal({
             title: "Success!",

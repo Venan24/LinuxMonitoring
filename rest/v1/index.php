@@ -15,8 +15,9 @@ Flight::route('/', function () {
 });
 
 // Function return all active servers that belong to specific user
-Flight::route('GET /server/@token', function ($token) {
+Flight::route('GET /server', function () {
   try {
+      $token = Flight::request()->query->authtoken;
       $tokenID = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
       $userid = $tokenID['id'];
       $data = Flight::pm()->query("SELECT s.server_id, s.server_name, m.os_name, m.os_version, m.external_ip, m.auth_code FROM servers s INNER JOIN Monitoring m ON s.auth_code = m.auth_code INNER JOIN ( SELECT max(id) max_id, os_name, os_version, auth_code FROM Monitoring GROUP BY os_name, os_version, auth_code ) t ON t.max_id = m.id WHERE s.user_id = :id ", [':id' => $userid]);
@@ -27,10 +28,11 @@ Flight::route('GET /server/@token', function ($token) {
 });
 
 // Function return all inactive servers that belong to specific user
-Flight::route('GET /serverinactive/@id', function ($token) {
+Flight::route('GET /serverinactive', function () {
     try {
-        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
-        $userid = $token['id'];
+        $token = Flight::request()->query->authtoken;
+        $tokenID = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $userid = $tokenID['id'];
         $data = Flight::pm()->query("SELECT * FROM servers WHERE user_id = :id AND NOT EXISTS(SELECT 1 FROM Monitoring WHERE Monitoring.auth_code=servers.auth_code)", [':id' => $userid]);
         Flight::json($data);
     } catch (Exception $e) {
@@ -71,12 +73,16 @@ Flight::route('GET /crateserver/@servername/@userid', function ($servername, $to
 });
 
 // Function that change server name
-Flight::route('GET /change_sever_name/@newservername/@authcode/@token', function ($newservername, $authcode, $token) {
+Flight::route('GET /change_sever_name', function () {
     try {
-        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
-        $unos = Flight::pm()->change_server_name($newservername, $authcode);
+        $token = Flight::request()->query->authtoken;
+        $authcode = Flight::request()->query->serverauth;
+        $newname = Flight::request()->query->newname;
+
+        $tokenUser = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $unos = Flight::pm()->change_server_name($newname, $authcode);
         if ($unos) {
-            Flight::json($newservername);
+            Flight::json($newname);
         }
     } catch (Exception $e) {
         Flight::halt(401, Flight::json(['Authorized' => false, 'Error' => $e->getMessage()]));
@@ -84,9 +90,11 @@ Flight::route('GET /change_sever_name/@newservername/@authcode/@token', function
 });
 
 // Function that remove srever
-Flight::route('GET /remove_server/@authcode/@token', function ($authcode, $token) {
+Flight::route('GET /remove_server', function () {
     try {
-        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $token = Flight::request()->query->authtoken;
+        $authcode = Flight::request()->query->serverauth;
+        $tokenUser = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
         $unos = Flight::pm()->remove_server($authcode);
         if ($unos) {
             Flight::json($authcode);
@@ -97,10 +105,11 @@ Flight::route('GET /remove_server/@authcode/@token', function ($authcode, $token
 });
 
 // Function return number of active servers by that user
-Flight::route('GET /serverbynum/@id', function ($token) {
+Flight::route('GET /serverbynum', function () {
     try {
-        $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
-        $userid = $token['id'];
+        $token = Flight::request()->query->authtoken;
+        $tokenID = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+        $userid = $tokenID['id'];
         $data = Flight::pm()->query("SELECT * FROM servers WHERE user_id = :id ", [':id' => $userid]);
         $row_cnt = count($data);
         Flight::json(['Servers' => $row_cnt]);
