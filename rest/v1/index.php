@@ -200,7 +200,7 @@ Flight::route('GET /getmachineinfo/@auth/@token', function ($auth, $token) {
 
 Flight::route('GET /download/@auth', function ($auth) {
   header('Content-type: text/plain');
-  header('Content-Disposition: attachment; filename="main.py"');
+  header('Content-Disposition: attachment; filename="ServerMonitor.py"');
   echo "Python Script: ".$auth;
 });
 
