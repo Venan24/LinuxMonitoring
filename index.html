@@ -240,7 +240,7 @@ License: You must have a valid license purchased only from themeforest(the above
   if (!Utils.get_from_localstorage('user')) {
     window.location = "/login.html";
   } else {
-    $.get("rest/v1/provjeritoken/" + token).done(function(data) {
+    $.get("rest/v1/provjeritoken",{authtoken: token}).done(functsion(data) {
       if (data.Authorized != false) {
         Utils.check_for_hacker();
         $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
