@@ -229,7 +229,7 @@ License: You must have a valid license purchased only from themeforest(the above
   if (!Utils.get_from_localstorage('user')) {
     window.location = "/login.html";
   } else {
-    $.get("rest/v1/provjeritoken/" + token).done(function(data) {
+    $.get("rest/v1/provjeritoken",{authtoken: token}).done(function(data) {
       if (data.Authorized != false) {
         Utils.check_for_hacker();
         $('.profile-image').attr('src', Utils.get_from_localstorage('user').image);
@@ -259,16 +259,19 @@ License: You must have a valid license purchased only from themeforest(the above
         swal.showInputError("You need to write something!");
         return false
       }
-      $.get("rest/v1/crateserver/" + inputValue + "/" + token).done(function(data) {
+      $.get("rest/v1/crateserver", {authtoken: token, newname: inputValue}).done(function(data) {
         //console.log(data);
         if (data.Authorized != false) {
           swal({
-            title: "Authentification Code: " + data,
-            type: "info",
-            confirmButtonClass: "btn-info",
-            confirmButtonText: "Close",
-            closeOnConfirm: true
-          });
+              title: "Authentification Code: " + data,
+              type: "success",
+              confirmButtonClass: "btn-info",
+              confirmButtonText: "Close",
+              closeOnConfirm: true
+            },
+            function() {
+              get_user_servers_by_number();
+            });
         } else {
           swal("Error!", "Error in: " + data, "error");
         }
@@ -286,7 +289,7 @@ License: You must have a valid license purchased only from themeforest(the above
     $('#servername').append(server_name);
 
 
-    $.get("rest/v1/getmachineinfo/" + auth + "/" + token).done(function(data) {
+    $.get("rest/v1/getmachineinfo", {authtoken: token, serverauth: auth}).done(function(data) {
       if (data.Authorized != false) {
         $.each(data, function(index, item) {
           $('#serverinfo').append("<table class='table'><tbody><tr><th scope='row'>OS (version): </th><td>"+item.os_name+" ("+item.os_version+")</td></tr><tr><th scope='row'>CPU: </th><td>"+item.cpu_model+"</td></tr><tr><th scope='row'>CPU Architecture </th><td>"+item.cpu_architecture+"</td></tr><tr><th scope='row'>CPU Cores (Threads): </th><td>"+item.cpu_cores+" ("+item.cpu_threads+")</td></tr><tr><th scope='row'>Hostname</th><td>"+item.hostname+"</td></tr><tr><th scope='row'>IP Internale (Extrernal): </th><td>"+item.internal_ip+" ("+item.external_ip+")</td></tr></tbody></table>");
@@ -296,7 +299,7 @@ License: You must have a valid license purchased only from themeforest(the above
       }
     });
 
-    $.get("rest/v1/getgraph/" + auth + "/" + token).done(function(data) {
+    $.get("rest/v1/getgraph", {authtoken: token, serverauth: auth}).done(function(data) {
       //console.log(data);
       if (data.Authorized != false) {
         var timesubmited = [];

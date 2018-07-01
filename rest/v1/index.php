@@ -187,9 +187,11 @@ Flight::route('POST /checkauth', function () {
 });
 
 //Get graph data
-Flight::route('GET /getgraph/@auth/@token', function ($auth, $token) {
+Flight::route('GET /getgraph', function () {
   try {
-      $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+      $token = Flight::request()->query->authtoken;
+      $auth = Flight::request()->query->serverauth;
+      $tokenUser = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
       $data = Flight::pm()->query("SELECT * FROM (SELECT * FROM Monitoring WHERE auth_code = :auth ORDER BY id DESC LIMIT 12) sub ORDER BY id ASC", [':auth' => $auth]);
       Flight::json($data);
   } catch (Exception $e) {
@@ -198,10 +200,12 @@ Flight::route('GET /getgraph/@auth/@token', function ($auth, $token) {
 });
 
 //Get machine info
-Flight::route('GET /getmachineinfo/@auth/@token', function ($auth, $token) {
+Flight::route('GET /getmachineinfo', function () {
   try {
-      $token = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
-      $userid = $token['id'];
+      $token = Flight::request()->query->authtoken;
+      $auth = Flight::request()->query->serverauth;
+      $tokenUser = (array)JWT::decode($token, Config::JWT_SECRET, ['HS256'])->user;
+      $userid = $tokenUser['id'];
       $data = Flight::pm()->query("SELECT id, os_name, os_version, cpu_model, cpu_architecture, cpu_cores, cpu_threads, hostname, internal_ip, external_ip, uptime FROM Monitoring WHERE auth_code = :auth ORDER BY id DESC LIMIT 1", [':auth' => $auth]);
       Flight::json($data);
   } catch (Exception $e) {
