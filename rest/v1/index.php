@@ -216,7 +216,11 @@ Flight::route('GET /getmachineinfo', function () {
 Flight::route('GET /download/@auth', function ($auth) {
   header('Content-type: text/plain');
   header('Content-Disposition: attachment; filename="ServerMonitor.py"');
-  echo "Python Script: ".$auth;
+  echo file_get_contents( "imports.php" );
+  echo "auth_code = \"".$auth."\";\n";
+  //echo "user_email = \"venanosmic24@gmail.com\";\n";
+  echo file_get_contents( "Pyscript.php" );
+
 });
 
 Flight::route('POST /login', function () {
