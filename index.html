@@ -341,12 +341,12 @@ License: You must have a valid license purchased only from themeforest(the above
         swal.showInputError("You need to write something!");
         return false
       }
-      $.get("rest/v1/crateserver/" + inputValue + "/" + token).done(function(data) {
+      $.get("rest/v1/crateserver", {authtoken: token, newname: inputValue}).done(function(data) {
         //console.log(data);
         if (data.Authorized != false) {
           swal({
               title: "Authentification Code: " + data,
-              type: "info",
+              type: "success",
               confirmButtonClass: "btn-info",
               confirmButtonText: "Close",
               closeOnConfirm: true
@@ -381,14 +381,14 @@ License: You must have a valid license purchased only from themeforest(the above
               title: "Deleted!",
               text: "Your server has been deleted",
               type: "success",
-              timer: 1500,
+              timer: 1000,
               showConfirmButton: false
             });
             window.setTimeout(function() {
               get_user_servers_list();
               get_user_servers_list_inactive()
               get_user_servers_by_number();
-            }, 1500);
+            }, 1000);
           } else {
             swal("Error!", "Error in: " + data, "error");
           }
