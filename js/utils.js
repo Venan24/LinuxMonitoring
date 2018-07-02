@@ -164,6 +164,16 @@ var Utils = {
     });
   },
 
+  downoload_file : function (dataurl, filename) {
+    var a = document.createElement("a");
+    a.href = dataurl;
+    a.setAttribute("download", filename);
+    var b = document.createEvent("MouseEvents");
+    b.initEvent("click", false, true);
+    a.dispatchEvent(b);
+    return false;
+  },
+
   remove_from_localstorage : function (key){
     window.localStorage.removeItem(key);
   },

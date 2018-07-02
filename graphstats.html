@@ -262,8 +262,10 @@ License: You must have a valid license purchased only from themeforest(the above
       $.get("rest/v1/crateserver", {authtoken: token, newname: inputValue}).done(function(data) {
         //console.log(data);
         if (data.Authorized != false) {
+          Utils.downoload_file("rest/v1/download/" + data, "LinuxMonitoring.py");
           swal({
-              title: "Authentification Code: " + data,
+              title: "Successfully Created",
+              text: "To start monitoring, run downloaded file with: sudo python2 ServerMonitoring.py",
               type: "success",
               confirmButtonClass: "btn-info",
               confirmButtonText: "Close",
