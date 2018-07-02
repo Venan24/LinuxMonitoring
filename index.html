@@ -170,19 +170,7 @@ License: You must have a valid license purchased only from themeforest(the above
                           <div class="panel panel-primary">
                             <div class="panel-heading">All active servers</div>
                             <div class="panel-body">
-                              <table class="table" id="all_servers">
-                                <thead>
-                                  <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Server Name</th>
-                                    <th scope="col">OS</th>
-                                    <th scope="col">OS Version</th>
-                                    <th scope="col">IP</th>
-                                    <th scope="col">Action</th>
-                                  </tr>
-                                </thead>
-                              </table>
-
+                              <table class="table" id="all_servers"></table>
                             </div>
                           </div>
                         </div>
@@ -192,15 +180,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <div class="panel panel-danger">
                               <div class="panel-heading">All inactive servers</div>
                               <div class="panel-body">
-                                <table class="table" id="all_inactive_servers">
-                                  <thead>
-                                    <tr>
-                                      <th scope="col">#</th>
-                                      <th scope="col">Server Name</th>
-                                      <th scope="col">Action</th>
-                                    </tr>
-                                  </thead>
-                                </table>
+                                <table class="table" id="all_inactive_servers"></table>
                               </div>
                             </div>
                           </div>
@@ -259,7 +239,6 @@ License: You must have a valid license purchased only from themeforest(the above
   //Get all servers that running script (at least once)
   function get_user_servers_list() {
     $.get("rest/v1/server", {authtoken: token}).done(function(data) {
-      //console.log(data);
       if (data.Authorized == false) {
         Utils.incorrect_auth();
       } else {
@@ -284,7 +263,6 @@ License: You must have a valid license purchased only from themeforest(the above
   //Get all inactive servers
   function get_user_servers_list_inactive() {
     $.get("rest/v1/serverinactive", {authtoken: token}).done(function(data) {
-      //console.log(data);
       if (data.Authorized == false) {
         Utils.incorrect_auth();
       } else {
@@ -343,7 +321,6 @@ License: You must have a valid license purchased only from themeforest(the above
         return false
       }
       $.get("rest/v1/crateserver", {authtoken: token, newname: inputValue}).done(function(data) {
-        //console.log(data);
         if (data.Authorized != false) {
           Utils.downoload_file("rest/v1/download/" + data, "LinuxMonitoring.py");
           swal({
@@ -396,7 +373,7 @@ License: You must have a valid license purchased only from themeforest(the above
             swal("Error!", "Error in: " + data, "error");
           }
         }).fail(function(error) {
-          console.log(error);
+          console.log(error.responseJSON.error);
         });
       });
   }
@@ -464,7 +441,7 @@ License: You must have a valid license purchased only from themeforest(the above
           swal("Error!", "Error in: " + data, "error");
         }
       }).fail(function(error) {
-        console.log(error);
+        console.log(error.responseJSON.error);
       });
     });
   }
