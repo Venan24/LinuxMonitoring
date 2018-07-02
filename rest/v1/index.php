@@ -213,6 +213,7 @@ Flight::route('GET /getmachineinfo', function () {
   }
 });
 
+//Download monitoring scrypt
 Flight::route('GET /download/@auth', function ($auth) {
   header('Content-type: text/plain');
   header('Content-Disposition: attachment; filename="ServerMonitor.py"');
@@ -223,6 +224,7 @@ Flight::route('GET /download/@auth', function ($auth) {
 
 });
 
+//Login form after submited
 Flight::route('POST /login', function () {
     $email = Flight::request()->data->email;
     $user = Flight::pm()->get_user_by_email($email);
@@ -236,7 +238,7 @@ Flight::route('POST /login', function () {
     }
 });
 
-
+//Get redirect link
 Flight::route('GET /redirect', function () {
     error_reporting(E_ALL);
     ini_set('display_errors', '1');
@@ -254,6 +256,7 @@ Flight::route('GET /redirect', function () {
     }
 });
 
+//Decode JWT token
 Flight::route('POST /decode', function () {
     try {
         $token = Flight::request()->data->token;
@@ -264,6 +267,7 @@ Flight::route('POST /decode', function () {
     }
 });
 
+//Get user by email
 Flight::route('GET /user/@email', function ($email) {
     $email = Flight::request()->data->email;
     $user = Flight::pm()->get_user_by_email($email);
