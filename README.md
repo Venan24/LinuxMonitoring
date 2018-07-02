@@ -7,9 +7,9 @@ LinuxMonitoring is using Python script to monitor any linux machine for CPU, OS,
 * Server Ownership Authentication (With Python Scrypt)
 * Server Stats (CPU, OS, Network, RAM, SWAP, HDD)
 * Server Check via Viber message (Viber REST API)
+* Stats Graphs
 
 ## In Progress
-* Stats Graphs
 * Timeline for stats
 * DataTables
 * Alerts/Triggers (User Defined for any server parameter)
