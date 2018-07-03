@@ -63,7 +63,7 @@ class PersistenceManager{
   }
 
   public function insert_monitor_data($auth_code, $os_name, $os_version, $cpu_model, $cpu_architecture, $cpu_cores, $cpu_threads, $cpu_percentage, $hostname, $internal_ip, $external_ip, $ram_total, $ram_used, $ram_free, $ram_shared, $ram_available, $ram_buff, $swap_total, $swap_used, $swap_free, $total_hdd, $used_hdd, $available_hdd, $pid_running, $uptime, $timesubmited){
-    return $this->execute('INSERT INTO Monitoring (auth_code, os_name, os_version, cpu_model, cpu_architecture, cpu_cores, cpu_threads, cpu_percentage, hostname, internal_ip, external_ip, ram_total, ram_used, ram_free, ram_shared, ram_available, ram_buff, swap_total, swap_used, swap_free, total_hdd, used_hdd, available_hdd, pid_running, uptime, timesubmited) VALUES (:authcode, :osname, :osversion, :cpumodel, :cpuarch, :cpucores, :cputhread, :cpupercentage, :hostname, :internalip, :externalip, :ramtotal, :ramused, :ramfree, :ramshared, :ramavailable, :rambuff, :swaptotal, :swapused, :swapfree, :totalhdd, :usedhdd, :availablehdd, :pidrunning, :uptime, :timesubmited)', [
+    return $this->execute('INSERT INTO monitoring (auth_code, os_name, os_version, cpu_model, cpu_architecture, cpu_cores, cpu_threads, cpu_percentage, hostname, internal_ip, external_ip, ram_total, ram_used, ram_free, ram_shared, ram_available, ram_buff, swap_total, swap_used, swap_free, total_hdd, used_hdd, available_hdd, pid_running, uptime, timesubmited) VALUES (:authcode, :osname, :osversion, :cpumodel, :cpuarch, :cpucores, :cputhread, :cpupercentage, :hostname, :internalip, :externalip, :ramtotal, :ramused, :ramfree, :ramshared, :ramavailable, :rambuff, :swaptotal, :swapused, :swapfree, :totalhdd, :usedhdd, :availablehdd, :pidrunning, :uptime, :timesubmited)', [
       ':authcode' => $auth_code,
       ':osname' => $os_name,
       ':osversion' => $os_version,
@@ -116,7 +116,7 @@ class PersistenceManager{
 
 
   public function get_last_log($param){
-    return $this->query_single('SELECT cpu_percentage, ram_used, swap_used, used_hdd, timesubmited FROM Monitoring WHERE auth_code = :auth_code ORDER BY id DESC LIMIT 1', [':auth_code' => $param]);
+    return $this->query_single('SELECT cpu_percentage, ram_used, swap_used, used_hdd, timesubmited FROM monitoring WHERE auth_code = :auth_code ORDER BY id DESC LIMIT 1', [':auth_code' => $param]);
   }
 
 }
