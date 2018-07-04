@@ -321,16 +321,20 @@ License: You must have a valid license purchased only from themeforest(the above
         swal.showInputError("You need to write something!");
         return false
       }
-      $.get("rest/v1/crateserver/" + inputValue + "/" + token).done(function(data) {
-        //console.log(data);
+      $.get("rest/v1/crateserver", {authtoken: token, newname: inputValue}).done(function(data) {
         if (data.Authorized != false) {
+          Utils.downoload_file("rest/v1/download/" + data, "LinuxMonitoring.py");
           swal({
-            title: "Authentification Code: " + data,
-            type: "info",
-            confirmButtonClass: "btn-info",
-            confirmButtonText: "Close",
-            closeOnConfirm: true
-          });
+              title: "Successfully Created",
+              text: "To start monitoring, run downloaded file with: sudo python2 ServerMonitoring.py",
+              type: "success",
+              confirmButtonClass: "btn-info",
+              confirmButtonText: "Close",
+              closeOnConfirm: true
+            },
+            function() {
+              get_user_servers_by_number();
+            });
         } else {
           swal("Error!", "Error in: " + data, "error");
         }
