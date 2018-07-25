@@ -33,16 +33,12 @@ def send_monitor_data():
         'uptime': round((float(popen("awk '{print $1}' /proc/uptime").readline())/3600),2)
     }, ensure_ascii='False')
 
-    #Print value just for testing
-    #print(windows_usage)
-
-    #Post data to server
-    url = "http://localhost.monitorbeta.com/rest/v1/endpoint"
-    headers = {'content-type': 'application/json'}
-    r = post(url, data=windows_usage, headers=headers)
-
-    #Print response just for testing
-    print(r.text)
+    #Post Request
+    hdr = {"content-type": "application/json"}
+    conn = httplib.HTTPConnection('monitor.biznet.ba:80')
+    conn.request('POST', '/rest/v1/endpoint', body=windows_usage, headers=hdr)
+    response = conn.getresponse()
+    print(response.read())
 
     sleep(5)
 
