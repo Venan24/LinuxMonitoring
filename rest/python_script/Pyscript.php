@@ -35,7 +35,7 @@ def send_monitor_data():
 
     #Post Request
     hdr = {"content-type": "application/json"}
-    conn = httplib.HTTPConnection('monitor.biznet.ba:80')
+    conn = httplib.HTTPConnection('localhost.monitorbeta.com:80')
     conn.request('POST', '/rest/v1/endpoint', body=windows_usage, headers=hdr)
     response = conn.getresponse()
     print(response.read())
